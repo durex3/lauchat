@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.durex.lauchat.mapper.UserGroupMsgToUserMapper" >
+    <resultMap id="BaseResultMap" type="com.durex.lauchat.pojo.UserGroupMsgToUser" >
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="accept_user_id" property="acceptUserId" jdbcType="VARCHAR" />
+        <result column="user_group_msg_id" property="userGroupMsgId" jdbcType="VARCHAR" />
+        <result column="sign_flag" property="signFlag" jdbcType="INTEGER" />
+    </resultMap>
+
+    <insert id="batchInsert" parameterType="map">
+        INSERT
+        INTO
+            user_group_msg_to_user
+        VALUES
+          <foreach collection="userGroupMsgToUserList" item="userGroupMsgToUser" separator=",">
+              (
+              #{userGroupMsgToUser.id},
+              #{userGroupMsgToUser.acceptUserId},
+              #{userGroupMsgToUser.userGroupMsgId},
+              #{userGroupMsgToUser.signFlag}
+              )
+          </foreach>
+    </insert>
+    <update id="batchUpdateMsgSigned" parameterType="map">
+        UPDATE
+            user_group_msg_to_user
+        SET
+            sign_flag = 1
+        WHERE
+            accept_user_id = #{userId}
+        AND
+            user_group_msg_id
+        IN
+        <foreach collection="msgIdList" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+</mapper>

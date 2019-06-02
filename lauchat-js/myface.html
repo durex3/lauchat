@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/header.css"/>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript" src="js/app.js"></script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav title">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: black;"></a>
+			<a id="open_menu" class="mui-icon mui-pull-right" style="color: black;font-size: 17px;font-weight: bold">. . .</a>
+			<h1 class="title-left title-color" style="font-size: 17px;line-height: 44px;font-weight: 400">我的头像</h1>
+		</header>
+		<div class="mui-content">
+			<img id="img_myface">
+		</div>
+		<div id="sheet_myface" class="mui-popover mui-popover-bottom mui-popover-action ">
+			<!-- 可选择菜单 -->
+			<ul class="mui-table-view">
+			  <li class="mui-table-view-cell">
+				<a id="link_choosePhoto" href="#">选择图片</a>
+			  </li>
+			  <li class="mui-table-view-cell">
+				<a id="link_savePhoto" href="#">保存图片</a>
+			  </li>
+			</ul>
+			<!-- 取消菜单 -->
+			<ul class="mui-table-view">
+			  <li class="mui-table-view-cell">
+				<a id="cancel" href="#sheet1"><b>取消</b></a>
+			  </li>
+			</ul>
+		</div>
+		<script type="text/javascript">
+			mui.init()
+			mui.plusReady(function () {
+				
+				function refreshFace() {
+					var user = app.getUserGlobalInfo();
+					var imgMyFace = document.getElementById("img_myface");
+					if (user != null) {
+						var faceImage = user.faceImageBig;
+						if (app.isNotNull(faceImage)) {
+							imgMyFace.width = document.body.clientWidth;
+							imgMyFace.height = document.body.clientWidth;
+							imgMyFace.src = app.imgServerUrl + faceImage;
+						}
+					}
+				}
+				
+				// 返回
+				mui.back = function() {
+					plus.webview.currentWebview().close();
+				}
+				// 添加自定义事件 刷新信息
+				window.addEventListener("refresh", function() {
+					refreshFace();
+				});
+	
+				refreshFace();
+				
+				// 弹出操作菜单
+				var openMenu = document.getElementById("open_menu");
+				openMenu.addEventListener("tap", function() {
+					mui('#sheet_myface').popover('show');
+				});
+				
+				// 选择图片
+				var linkChoosePhoto = document.getElementById("link_choosePhoto");
+				linkChoosePhoto.addEventListener("tap", function() {
+					mui.openWindow({
+						url : "plugin/v3.1.6/myface-uploader.html",
+						id : "myface-uploader.html",
+						createNew : true
+					});
+					mui("#sheet_myface").popover("hide");
+				});
+				
+				// 保存图片
+				var linkSavePhoto = document.getElementById("link_savePhoto");
+				linkSavePhoto.addEventListener("tap", function() {
+					plus.nativeUI.showWaiting("下载中...");
+					var user = app.getUserGlobalInfo();
+					var dtast = plus.downloader.createDownload(
+						app.imgServerUrl + user.faceImageBig,
+						{},
+						function(downloadFile, status) {
+							plus.nativeUI.closeWaiting();
+							if (status == 200) {
+								var tempFile = downloadFile.filename;
+								// 保存到本地相册
+								plus.gallery.save(
+									tempFile,
+									function() {
+										app.showToast("保存照片成功", "success");
+										mui("#sheet_myface").popover("hide");
+									},
+									function() {
+										app.showToast("保存照片失败", "error");
+									}
+								);
+							} else {
+								app.showToast("下载失败", "error");
+							}
+						}
+					);
+					// 启动下载任务
+					dtast.start();
+				});
+				
+				// 取消
+				var cancel = document.getElementById("cancel");
+				cancel.addEventListener("tap", function() {
+					mui('#sheet_myface').popover("toggle");
+				});
+			});
+		</script>
+	</body>
+</html>

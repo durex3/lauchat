@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.durex.lauchat.mapper.FriendsRequestMapper" >
+    <resultMap id="BaseResultMap" type="com.durex.lauchat.pojo.FriendsRequest" >
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="send_user_id" property="sendUserId" jdbcType="VARCHAR" />
+        <result column="accept_user_id" property="acceptUserId" jdbcType="VARCHAR" />
+        <result column="request_date_time" property="requestDateTime" jdbcType="TIMESTAMP" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+        <result column="is_ready" property="isReady" jdbcType="INTEGER" />
+    </resultMap>
+  
+    <select id="queryFriendRequestList" parameterType="map" resultType="com.durex.lauchat.pojo.vo.FriendRequestVO">
+        SELECT
+          b.id as sendUserId,
+          b.username as sendUsername,
+          b.face_image as sendFaceImage,
+          b.nickname as sendNickname,
+          a.status as status,
+          a.is_ready as isReady
+        FROM
+          friends_request a
+        LEFT JOIN
+          users b
+        ON
+          a.send_user_id = b.id
+        where
+          a.accept_user_id = #{acceptUserId}
+        ORDER BY request_date_time DESC
+        LIMIT 0, 10
+    </select>
+
+    <select id="countNotReadyFriendRequestList" parameterType="map" resultType="int">
+        SELECT
+          COUNT(IF(is_ready = 0, 1, NULL))
+        FROM
+          friends_request
+        WHERE
+          accept_user_id = #{acceptUserId}
+        ORDER BY request_date_time DESC
+        LIMIT 0, 10
+    </select>
+
+    <update id="updateReadyStateBySendUserIdList">
+        UPDATE
+          friends_request
+        SET
+          is_ready = 1
+        WHERE
+          accept_user_id = #{acceptUserId}
+        AND
+          send_user_id
+        IN
+          <foreach collection="sendUserIdList" item="id" open="(" separator="," close=")">
+              #{id}
+          </foreach>
+    </update>
+
+    <update id="updateFriendRequest" parameterType="map">
+        UPDATE
+          friends_request
+        SET
+          status = 1
+        WHERE
+           send_user_id = #{sendUserId}
+        AND
+           accept_user_id = #{acceptUserId}
+    </update>
+
+</mapper>

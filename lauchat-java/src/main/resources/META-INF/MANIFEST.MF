@@ -1,0 +1,37 @@
+Manifest-Version: 1.0
+Class-Path: persistence-api-1.0.jar mapper-spring-boot-starter-1.2.4.j
+ ar slf4j-api-1.7.25.jar spring-web-5.0.7.RELEASE.jar jackson-annotati
+ ons-2.9.0.jar spring-boot-starter-logging-2.0.3.RELEASE.jar jsqlparse
+ r-1.0.jar spring-webmvc-5.0.7.RELEASE.jar classmate-1.3.4.jar log4j-a
+ pi-2.10.0.jar jcommander-1.72.jar fastdfs-client-1.26.2.jar j2objc-an
+ notations-1.1.jar javase-3.3.3.jar listenablefuture-9999.0-empty-to-a
+ void-conflict-with-guava.jar animal-sniffer-annotations-1.17.jar mock
+ ito-all-1.9.5.jar mybatis-spring-1.3.1.jar javax.annotation-api-1.3.2
+ .jar jackson-datatype-jsr310-2.9.6.jar thumbnailator-0.4.8.jar spring
+ -boot-starter-tomcat-2.0.3.RELEASE.jar commons-pool2-2.5.0.jar spring
+ -core-5.0.7.RELEASE.jar mapper-spring-boot-autoconfigure-1.2.4.jar sp
+ ring-expression-5.0.7.RELEASE.jar jai-imageio-core-1.4.0.jar validati
+ on-api-2.0.1.Final.jar logback-classic-1.2.3.jar logback-core-1.2.3.j
+ ar jul-to-slf4j-1.7.25.jar tomcat-embed-el-8.5.31.jar mybatis-3.4.5.j
+ ar spring-boot-starter-jdbc-2.0.3.RELEASE.jar spring-beans-5.0.7.RELE
+ ASE.jar HikariCP-2.7.9.jar pagehelper-spring-boot-autoconfigure-1.2.3
+ .jar jsr305-3.0.2.jar pagehelper-spring-boot-starter-1.2.3.jar pagehe
+ lper-5.1.2.jar jcl-over-slf4j-1.7.25.jar jboss-logging-3.3.2.Final.ja
+ r error_prone_annotations-2.2.0.jar spring-boot-autoconfigure-2.0.3.R
+ ELEASE.jar checker-qual-2.5.2.jar jackson-core-2.9.6.jar commons-io-1
+ .3.2.jar mapper-3.5.3.jar spring-context-5.0.7.RELEASE.jar failureacc
+ ess-1.0.1.jar commons-codec-1.11.jar core-3.3.3.jar spring-test-5.0.7
+ .RELEASE.jar spring-boot-2.0.3.RELEASE.jar spring-jcl-5.0.7.RELEASE.j
+ ar tomcat-embed-core-8.5.31.jar jackson-module-parameter-names-2.9.6.
+ jar jackson-databind-2.9.6.jar commons-beanutils-1.9.1.jar commons-co
+ llections-3.2.1.jar mybatis-spring-boot-starter-1.3.1.jar spring-jdbc
+ -5.0.7.RELEASE.jar mysql-connector-java-5.1.41.jar log4j-to-slf4j-2.1
+ 0.0.jar commons-lang3-3.4.jar jackson-datatype-jdk8-2.9.6.jar spring-
+ boot-configuration-processor-2.0.3.RELEASE.jar guava-27.0.1-jre.jar s
+ pring-boot-starter-2.0.3.RELEASE.jar spring-aop-5.0.7.RELEASE.jar spr
+ ing-boot-starter-web-2.0.3.RELEASE.jar snakeyaml-1.19.jar netty-all-4
+ .1.25.Final.jar tomcat-embed-websocket-8.5.31.jar mybatis-spring-boot
+ -autoconfigure-1.3.1.jar hibernate-validator-6.0.10.Final.jar spring-
+ tx-5.0.7.RELEASE.jar spring-boot-starter-json-2.0.3.RELEASE.jar
+Main-Class: com.durex.lauchat.LauChatApplication
+

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.durex.lauchat.mapper.UserGroupMapper" >
+  <resultMap id="BaseResultMap" type="com.durex.lauchat.pojo.UserGroup" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="admin_id" property="adminId" jdbcType="VARCHAR" />
+    <result column="icon" property="icon" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <resultMap id="userGroupVOMap" type="com.durex.lauchat.pojo.vo.UserGroupVO">
+    <id column="ug_id" property="id" jdbcType="VARCHAR" />
+    <result column="ug_name" property="name" jdbcType="VARCHAR"></result>
+    <result column="ug_admin_id" property="adminId" jdbcType="VARCHAR"></result>
+    <result column="ug_icon" property="icon" jdbcType="VARCHAR"></result>
+    <collection property="userList" ofType="com.durex.lauchat.pojo.vo.UserVO">
+      <id column="u_id" property="id" jdbcType="VARCHAR" />
+      <result column="u_username" property="username" jdbcType="VARCHAR" />
+      <result column="u_face_image" property="faceImage" jdbcType="VARCHAR" />
+      <result column="u_face_image_big" property="faceImageBig" jdbcType="VARCHAR" />
+      <result column="u_nickname" property="nickname" jdbcType="VARCHAR" />
+      <result column="u_qrcode" property="qrcode" jdbcType="VARCHAR" />
+    </collection>
+  </resultMap>
+  
+  <select id="selectByUserId" parameterType="map" resultMap="userGroupVOMap">
+    SELECT
+        ug.ug_id,
+        ug.ug_name,
+        ug.ug_admin_id,
+        ug.ug_icon,
+        u.id AS u_id,
+        u.username AS u_username,
+        u.face_image AS u_face_image,
+        u.face_image_big AS u_face_image_big,
+        u.nickname AS u_nickname,
+        u.qrcode AS u_qrcode
+    FROM
+        users u,
+        user_group_to_user ugtu,
+        (
+            SELECT
+                ug.id AS ug_id,
+                ug.name AS ug_name,
+                ug.admin_id AS ug_admin_id,
+                ug.icon AS ug_icon
+            FROM
+                user_group ug,
+                user_group_to_user ugtu
+            WHERE
+                ug.id = ugtu.user_group_id
+            AND
+                ugtu.user_id = #{userId}
+        ) ug
+    WHERE
+        u.id = ugtu.user_id
+    AND
+        ugtu.user_group_id = ug.ug_id
+    </select>
+</mapper>

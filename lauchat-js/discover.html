@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link href="css/header.css" rel="stylesheet" />
+	</head>
+	<style type="text/css">
+		.mui-content > .mui-table-view:first-child {
+		    margin-top: 0px;
+		}
+	</style>
+	<body>
+		
+		<div class="mui-content">
+		    <ul class="mui-table-view">
+		        <li class="mui-table-view-cell mui-media">
+	                <img class="mui-media-object mui-pull-left" 
+	                	src="image/friends.png" style="max-width: 24px;height: 24px;">
+	                <p class="mui-ellipsis" 
+	                	style="line-height: 24px;color: #000000;font-size: 16px;">
+	                	<span style="margin-left: 10px;">朋友圈</span>
+	                </p>
+		        </li>
+		    </ul>
+		    <br/>
+		    <ul class="mui-table-view">
+		        <li id="li_scanme" class="mui-table-view-cell mui-media">
+	                <img class="mui-media-object mui-pull-left" 
+	                	src="image/scanscan.png" style="max-width: 24px;height: 24px;">
+	                <p class="mui-ellipsis" 
+	                	style="line-height: 24px;color: #000000;font-size: 16px;">
+	                	<span style="margin-left: 10px;">扫一扫</span>
+	                </p>
+		        </li>
+				<li id="" class="mui-table-view-cell mui-media">
+				    <img class="mui-media-object mui-pull-left" 
+				    	src="image/shake.png" style="max-width: 24px;height: 24px;">
+				    <p class="mui-ellipsis" 
+				    	style="line-height: 24px;color: #000000;font-size: 16px;">
+				    	<span style="margin-left: 10px;">摇一摇</span>
+				    </p>
+				</li>
+			</ul>
+			<br/>
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell mui-media">
+				    <img class="mui-media-object mui-pull-left" 
+				    	src="image/look.png" style="max-width: 24px;height: 24px;">
+				    <p class="mui-ellipsis" 
+				    	style="line-height: 24px;color: #000000;font-size: 16px;">
+				    	<span style="margin-left: 10px;">看一看</span>
+				    </p>
+				</li>
+				<li class="mui-table-view-cell mui-media">
+				    <img class="mui-media-object mui-pull-left" 
+				    	src="image/seach.png" style="max-width: 24px;height: 24px;">
+				    <p class="mui-ellipsis" 
+				    	style="line-height: 24px;color: #000000;font-size: 16px;">
+				    	<span style="margin-left: 10px;">搜一搜</span>
+				    </p>
+				</li>
+			</ul>
+			<br/>
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell mui-media">
+				    <img class="mui-media-object mui-pull-left" 
+				    	src="image/people_nearby.png" style="max-width: 24px;height: 24px;">
+				    <p class="mui-ellipsis" 
+				    	style="line-height: 24px;color: #000000;font-size: 16px;">
+				    	<span style="margin-left: 10px;">附近的人</span>
+				    </p>
+				</li>
+		    </ul>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			mui.plusReady(function() {
+				var liScanme = document.getElementById("li_scanme");
+				liScanme.addEventListener("tap", function() {
+					mui.openWindow({
+						url : "scanme.html",
+						id : "scanme.html",
+						styles : {},
+						waiting : {
+							autoShow : false, //自动显示等待框，默认为true
+							title : '', //等待对话框上显示的提示内容
+							options : {}
+						}
+					})
+				});
+			});
+		</script>
+	</body>
+</html>

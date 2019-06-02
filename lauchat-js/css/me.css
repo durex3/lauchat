@@ -1,0 +1,31 @@
+.mui-content > .mui-table-view:first-child {
+    margin-top: 0px;
+}
+.face-arrowright {
+	line-height: 42px;
+	color: lightgray;
+	margin-left: 3px;
+}
+
+.face-text {
+	line-height: 42px;
+	font-size: 16px;
+}
+
+.nickname-arrowright {
+	color: lightgray;
+	margin-left: 3px;
+}
+
+#span_nickname, #span_username {
+	color: gray;
+	font-size: 14px;
+}
+#span_username {
+	margin-right: 8px;
+}
+
+#img-qrcode {
+	max-width: 20px;
+	height: 20px;
+}

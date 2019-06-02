@@ -1,0 +1,195 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.css" rel="stylesheet" />
+		<link rel="stylesheet" href="css/me.css" />
+	</head>
+	<body>
+		<div class="mui-content">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell mui-media">
+					<a id="link_myface" href="javascript:;">
+						<span class="mui-icon mui-icon-arrowright mui-pull-right face-arrowright"></span>
+						<img id="img_my_face" class="mui-media-object mui-pull-right">
+						<div class="mui-media-body face-text">
+							头像
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media">
+					<a id="link_nickname" href="javascript:;">
+						<span class="mui-icon mui-icon-arrowright mui-pull-right nickname-arrowright"></span>
+						<span class="mui-pull-right" id="span_nickname"></span>
+						<div class="mui-media-body">
+							昵称
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media">
+					<a href="javascript:;">
+						<span id="span_username" class="mui-pull-right"></span>
+						<div class="mui-media-body">
+							琉信号
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media">
+					<a id="link_my_qrcode" href="javascript:;">
+						<span class="mui-icon mui-icon-arrowright mui-pull-right nickname-arrowright"></span>
+						<img class="mui-media-object mui-pull-right" id="img-qrcode" src="image/qrcode.png">
+						<div class="mui-media-body">
+							二维码名片
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media">
+					<a href="javascript:;">
+						<span class="mui-icon mui-icon-arrowright mui-pull-right nickname-arrowright"></span>
+						<div class="mui-media-body">
+							我的地址
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media">
+					<a href="javascript:;">
+						<span class="mui-icon mui-icon-arrowright mui-pull-right nickname-arrowright"></span>
+						<div class="mui-media-body">
+							更多
+						</div>
+					</a>
+				</li>
+			</ul>
+			<br>
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell mui-media">
+					<a href="javascript:;">
+						<span class="mui-icon mui-icon-arrowright mui-pull-right nickname-arrowright"></span>
+						<img class="mui-media-object mui-pull-left" src="image/collect.png" style="max-width: 20px; height: 20px;">
+						<div class="mui-media-body">
+							收藏
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media">
+					<a href="javascript:;">
+						<span class="mui-icon mui-icon-arrowright mui-pull-right nickname-arrowright"></span>
+						<img class="mui-media-object mui-pull-left img-left" src="image/photo%20.png" style="max-width: 20px; height: 20px;">
+						<div class="mui-media-body">
+							相册
+						</div>
+					</a>
+				</li>
+			</ul>
+			<br>
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell mui-media">
+					<a id="link_set" href="javascript:;">
+						<span class="mui-icon mui-icon-arrowright mui-pull-right nickname-arrowright"></span>
+						<img class="mui-media-object mui-pull-left img-left" src="image/set.png" style="max-width: 20px; height: 20px;">
+						<div class="mui-media-body">
+							设置
+						</div>
+					</a>
+				</li>
+			</ul>
+		</div>
+		<script src="js/mui.js"></script>
+		<script src="js/app.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			mui.plusReady(function() {
+				var meWebview = plus.webview.currentWebview();
+				meWebview.addEventListener("show", function() {
+					refreshUserInfo();
+				});
+
+				// 页面跳转，修改头像
+				var linkMyFace = document.getElementById("link_myface");
+				linkMyFace.addEventListener("tap", function() {
+					mui.openWindow({
+						url : "myface.html",
+						id : "myface.html",
+						styles : {},
+						waiting : {
+							autoShow : false, //自动显示等待框，默认为true
+							title : '', //等待对话框上显示的提示内容
+							options : {}
+						}
+					});
+				});
+
+				// 页面跳转，修改昵称
+				var linkNickname = document.getElementById("link_nickname");
+				linkNickname.addEventListener("tap", function() {
+					mui.openWindow({
+						url : "mynickname.html",
+						id : "mynickname.html",
+						styles : {},
+						waiting : {
+							autoShow : false, //自动显示等待框，默认为true
+							title : '', //等待对话框上显示的提示内容
+							options : {}
+						}
+					})
+				});
+
+				// 查看我的二维码
+				var linkMyQrcode = document.getElementById("link_my_qrcode");
+				linkMyQrcode.addEventListener("tap", function() {
+					mui.openWindow({
+						url : "myQRCode.html",
+						id : "myQRCode.html",
+						styles : {},
+						waiting : {
+							autoShow : false, //自动显示等待框，默认为true
+							title : '', //等待对话框上显示的提示内容
+							options : {}
+						}
+					})
+				});
+
+				//
+				var linkSet = document.getElementById("link_set");
+				linkSet.addEventListener("tap", function() {
+					mui.openWindow({
+						url : "set.html",
+						id : "set.html",
+						styles : {},
+						waiting : {
+							autoShow : false, //自动显示等待框，默认为true
+							title : '', //等待对话框上显示的提示内容
+							options : {}
+						}
+					})
+				});
+
+				function refreshUserInfo() {
+					var user = app.getUserGlobalInfo();
+					if (user != null) {
+						var faceImage = user.faceImage;
+						var nickname = user.nickname;
+						var username = user.username;
+
+						var span_nickname = document.getElementById("span_nickname");
+						var span_username = document.getElementById("span_username");
+						span_nickname.innerHTML = nickname;
+						span_username.innerHTML = username;
+
+						if (app.isNotNull(faceImage)) {
+							var imgMyFace = document.getElementById("img_my_face");
+							imgMyFace.src = app.imgServerUrl + faceImage;
+						}
+					}
+				}
+
+				// 添加自定义事件 刷新信息
+				window.addEventListener("refresh", function() {
+					refreshUserInfo();
+				});
+			});
+		</script>
+	</body>
+</html>

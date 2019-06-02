@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/header.css" />
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav title">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: black;"></a>
+			<a id="link_submit_search" class="mui-icon mui-icon-right-nav mui-pull-right" 
+				style="color: black;font-size: 17px;line-height: 24px;">搜索</a>
+			<h1 class="title-left title-color"  style="font-size: 17px;line-height: 44px;font-weight: 400">添加好友</h1>
+		</header>
+		<div class="mui-content">
+			<div class="mui-input-row">
+			    <input id="txt_your_friend_username" 
+			    	type="text" class="mui-input-clear" 
+			    	placeholder="搜索朋友">
+			</div>
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script src="js/app.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			mui.plusReady(function() {
+				var user = app.getUserGlobalInfo();
+				var txtYourFriendUsername = document.getElementById("txt_your_friend_username");
+				// 提交事件，搜索朋友
+				var linkSubmitSearch = document.getElementById("link_submit_search");
+				linkSubmitSearch.addEventListener("tap", function() {
+					
+					var myFriendUsername = txtYourFriendUsername.value;
+					
+					plus.nativeUI.showWaiting("请稍后...");
+					mui.ajax(app.serverUrl + "/f/search", {
+						data : {
+							myUserId : user.id,
+							myFriendUsername : myFriendUsername
+						},
+						dataType : 'json',//服务器返回json格式数据
+						type : 'get',//HTTP请求类型
+						timeout : 10000,//超时时间设置为10秒；
+						success : function(data) {
+							//服务器返回响应
+							plus.nativeUI.closeWaiting();
+							if (data.result) {
+								mui.openWindow({
+									url : "searchFriendsResult.html",
+									id : "searchFriendsResult.html",
+									styles : {},
+									extras : {
+										willBeFriend: data.data
+									},
+									waiting : {
+										autoShow : false, //自动显示等待框，默认为true
+										title : '', //等待对话框上显示的提示内容
+										options : {}
+									}
+								}); 
+							} else {
+								app.showToast(data.msg, "error");
+							}
+						}
+					});
+				});
+			});
+		</script>
+	</body>
+</html>

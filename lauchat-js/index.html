@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/header.css" />
+		<link rel="stylesheet" type="text/css" href="css/tab.css" />
+		<link rel="stylesheet" type="text/css" href="myfont/iconfont.css" />
+		<style type="text/css">
+			#popover {
+				height: 100px;
+				width: 200px;
+			}
+		</style>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+		</script>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav title">
+			<h1 id="tab_title" class="title-left title-color"><b>琉信</b></h1>
+			<span id="open_popover" class="mui-icon mui-icon-plus title-right"></span>
+			<span class="mui-icon mui-icon-search title-right"></span>
+		</header>
+		<nav class="mui-bar mui-bar-tab">
+			<a class="mui-tab-item mui-active" tabindex="0">
+				<span class="mui-icon iconfont icon-wx"></span>
+				<span class="mui-tab-label">琉信</span>
+			</a>
+			<a class="mui-tab-item" tabindex="1">
+				<span class="mui-icon iconfont icon-tongxunlu"></span>
+				<span class="mui-tab-label">通讯录</span>
+			</a>
+			<a class="mui-tab-item" tabindex="2">
+				<span class="mui-icon iconfont icon-faxian1"></span>
+				<span class="mui-tab-label">发现</span>
+			</a>
+			<a class="mui-tab-item" tabindex="3">
+				<span class="mui-icon iconfont icon-wode"></span>
+				<span class="mui-tab-label">我</span>
+			</a>
+		</nav>
+		<script type="text/javascript">
+			// 每个webview的id和url
+			var lauChatArray = [{
+					id: "chatlist.html",
+					url: "chatlist.html",
+					title: "琉信"
+				},
+				{
+					id: "contact.html",
+					url: "contact.html",
+					title: "通讯录"
+				},
+				{
+					id: "discover.html",
+					url: "discover.html",
+					title: "发现"
+				},
+				{
+					id: "me.html",
+					url: "me.html",
+					title: "我"
+				}
+			];
+			var lauChatStyle = {
+				top: "44px",
+				bottom: "50px"
+			};
+			mui.plusReady(function() {
+				plus.navigator.setStatusBarBackground("#8EE5EE");
+				plus.navigator.setStatusBarStyle("light");
+				// 对网络事件进行监听
+				netChangeSwitch();
+
+				// 禁止用户返回登陆页面
+				mui.back = function() {
+					return false;
+				}
+				// 关闭登陆页面
+				plus.webview.currentWebview().opener().hide();
+				setTimeout(function() {
+					plus.webview.currentWebview().opener().close();
+				}, 1000);
+				// 获取当前的WebView
+				var indexWebView = plus.webview.currentWebview();
+				for (var i = 0; i < lauChatArray.length; i++) {
+					var lauChatWebview = plus.webview.create(lauChatArray[i].url, lauChatArray[i].id, lauChatStyle);
+					lauChatWebview.hide();
+					// 追加每一个子页面到当前主页面
+					indexWebView.append(lauChatWebview);
+				}
+				plus.webview.show(lauChatArray[0].id);
+
+				// 批量绑定tap事件, 展示不同的webview
+				mui(".mui-bar-tab").on("tap", "a", function() {
+					var tabindex = this.getAttribute("tabindex");
+					plus.webview.show(lauChatArray[tabindex].id, "fade-in", 200);
+					for (var i = 0; i < lauChatArray.length; i++) {
+						if (i != tabindex) {
+							// 隐藏WebView
+							plus.webview.hide(lauChatArray[i].id, "fade-out", 200);
+							continue;
+						}
+						document.getElementById("tab_title").innerHTML = lauChatArray[i].title;
+					}
+
+				});
+
+				// 创建子页面，首个选项卡页面显示，其它均隐藏
+				var floatw = null;
+
+				floatw = plus.webview.create("menu.html", "menu.html", {
+					background: 'transparent',
+					zindex: 10,
+				});
+
+				// 打开菜单
+				var openPopover = document.getElementById("open_popover");
+				openPopover.addEventListener("tap", function() {
+					if (floatw) { // 避免快速多次点击创建多个窗口 
+						//floatw.show("fade-in",300); 
+						plus.webview.show("menu.html", "fade-in", 300);
+					} else {
+						floatw = plus.webview.create("menu.html", "menu", {
+							background: 'transparent',
+							zindex: 10,
+						});
+						floatw.show("fade-in", 300);
+					}
+				});
+				
+				// 延时加载
+				setTimeout("initData()", "1000");
+			});
+
+			function netChangeSwitch() {
+				document.addEventListener("netchange", function() {
+					// 网络连接
+					var connectionStatus = plus.networkinfo.getCurrentType();
+					var tabTitle = document.getElementById("tab_title");
+					if (connectionStatus != 0 && connectionStatus != 1) {
+						// 重新打开网络连接
+						tabTitle.innerHTML = "<b>琉信</b>";
+					} else {
+						// 关闭网络连接
+						tabTitle.innerHTML = "<b>琉信(未连接)</b>";
+					}
+				});
+			}
+
+			// 预加载
+			function initData() {
+				var chatlist = plus.webview.getWebviewById("chatlist.html");
+				mui.fire(chatlist, "refresh");
+
+				var me = plus.webview.getWebviewById("me.html");
+				mui.fire(me, "refresh");
+			}
+		</script>
+	</body>
+</html>

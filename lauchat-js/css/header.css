@@ -1,0 +1,42 @@
+.title {
+	background-color: #8EE5EE;
+}
+
+.title-color {
+	color: black;
+}
+
+.title-left {  
+    float: left;  
+    font-size: 17px;  
+    line-height: 44px;  
+    position: absolute;  
+    margin: 0 -10px;  
+    padding: 0;  
+    text-align: center;  
+    display: inline-block;  
+    overflow: hidden;  
+    margin: 0;  
+    text-overflow: ellipsis;  
+}  
+
+/*标题中图标居右侧的css样式*/  
+.title-right {  
+    float: right;  
+    font-size: 17px;  
+    font-weight: 500;  
+    line-height: 44px !important;  
+    position: absolute;  
+    display: block;  
+    width: 100%;  
+    margin: 0 10px !important;  
+    padding: 0 !important;  
+    text-align: center;  
+    white-space: nowrap;  
+    color: #000;  
+    display: inline-block;  
+    overflow: hidden;  
+    width: auto;  
+    margin: 0;  
+    text-overflow: ellipsis;  
+}  

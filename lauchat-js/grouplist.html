@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link href="css/header.css" rel="stylesheet" />
+	</head>
+	<style type="text/css">
+		html,
+		body {
+			height: 100%;
+			overflow: hidden;
+		}
+
+		.mui-bar {
+			-webkit-box-shadow: none;
+			box-shadow: none;
+		}
+
+		.mui-content>.mui-table-view:first-child {
+			margin-top: 0px;
+		}
+
+		.mui-indexed-list-bar a {
+			color: #000000;
+		}
+
+		img {
+			border-radius: 5px;
+			overflow: hidden;
+		}
+
+		span {
+			color: gray;
+		}
+	</style>
+	<body>
+		<header class="mui-bar mui-bar-nav title">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: black;"></a>
+			<h1 class="title-left title-color" id="chatting-nickname" style="font-size: 17px;line-height: 44px;font-weight: 400">我的群聊</h1>
+		</header>
+		<div class="mui-content">
+			<ul id="ul_group_list" class="mui-table-view">
+
+			</ul>
+		</div>
+		<script src="js/mui.js"></script>
+		<script src="js/app.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			mui.plusReady(function() {
+				var user = app.getUserGlobalInfo();
+				var groupListWebview = plus.webview.currentWebview();
+				groupListWebview.addEventListener("show", function() {
+					renderGroupListPage(app.getUserGroupList());
+				});
+				
+				// 为用户群批量绑定点击事件
+				mui("#ul_group_list").on("tap", ".user_group_list", function(e){
+					var userGroupId = this.getAttribute("userGroupId");
+					var userGroupName = this.getAttribute("userGroupName");
+					var userGroupLength = this.getAttribute("userGroupLength");
+					// 打开群聊天子页面
+					mui.openWindow({
+						url : "groupchatting.html",
+						id : "groupchatting-" + userGroupId,	// 每个朋友的聊天页面都是唯一对应的
+						extras : {
+							userGroupId : userGroupId,
+							userGroupName : userGroupName + '<span> (' + userGroupLength + ')</span>'
+						},
+						waiting : {
+							autoShow : false, //自动显示等待框，默认为true
+							title : '', //等待对话框上显示的提示内容
+							options : {}
+						}
+					});
+				});
+			});
+
+			function fetchUserGroupList(userId) {
+				mui.ajax(app.serverUrl + "/ug/getUserGroupList", {
+					data: {
+						userId: userId
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'get', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					success: function(data) {
+						if (data.result) {
+							app.setUserGroupList(data.data);
+							renderGroupListPage(data.data);
+						} else {
+							app.showToast(data.msg, "error");
+						}
+					}
+				});
+			}
+
+			function renderGroupListPage(groupList) {
+				var html = "";
+				for (var i = 0; i < groupList.length; i++) {
+					html += '<li class="mui-table-view-cell mui-media user_group_list" userGroupId=' + groupList[i].id + ' userGroupName=' + groupList[i].name + ' userGroupLength=' + groupList[i].userList.length +'>' +
+						'<a href="javascript:;">' +
+						'<img class="mui-media-object mui-pull-left" src="' + app.imgServerUrl + groupList[i].icon + '">' +
+						'<div class="mui-media-body" style="line-height: 42px;">' +
+						groupList[i].name + '<span> (' + groupList[i].userList.length + ')</span>' +
+						'</div>' +
+						'</a>' +
+						'</li>';
+				}
+				document.getElementById("ul_group_list").innerHTML = html;
+			}
+		</script>
+	</body>
+</html>

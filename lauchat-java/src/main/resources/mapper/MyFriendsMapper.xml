@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.durex.lauchat.mapper.MyFriendsMapper" >
+  <resultMap id="BaseResultMap" type="com.durex.lauchat.pojo.MyFriends" >
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="my_user_id" property="myUserId" jdbcType="VARCHAR" />
+    <result column="my_friend_user_id" property="myFriendUserId" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <insert id="batchInsert" parameterType="map">
+    INSERT
+    INTO
+        my_friends
+    VALUES
+        <foreach collection="friendsList" item="friend" separator=",">
+          (
+            #{friend.id},
+            #{friend.myUserId},
+            #{friend.myFriendUserId}
+          )
+        </foreach>
+  </insert>
+
+  <select id="queryMyFriendList" parameterType="map" resultType="com.durex.lauchat.pojo.vo.MyFriendVO">
+      SELECT
+			u.id as friendUserId,
+			u.username as friendUsername,
+			u.face_image as friendFaceImage,
+			u.nickname as friendNickname
+      FROM
+			my_friends mf
+	  LEFT JOIN
+			users u
+	  ON
+			u.id = mf.my_friend_user_id
+	  WHERE
+			mf.my_user_id = #{userId}
+  </select>
+</mapper>

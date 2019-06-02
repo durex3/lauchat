@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>注册</title>
+	<script type="text/javascript" src="js/app.js"></script>
+    <link href="css/mui.min.css" rel="stylesheet"/>
+	<link rel="stylesheet" type="text/css" href="css/register.css"/>
+</head>
+<body>
+    <header class="mui-bar mui-bar-nav">
+        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+        <h1 class="mui-title">注册</h1>
+    </header>
+   <div class="mui-content">
+        <form class="mui-input-group">
+            <div class="mui-input-row">
+                <label>用户名</label>
+                <input type="text" id="username" class="mui-input-clear mui-input" placeholder="请输入用户名">
+            </div>
+            <div class="mui-input-row">
+                <label>密码</label>
+                <input type="password" id="password" class="mui-input-clear mui-input" placeholder="请输入密码">
+            </div>
+        </form>
+        <div class="mui-content-padded">
+            <button id="register" class="mui-btn mui-btn-block mui-btn-blue border-radius">提 交</button>
+			<p style="padding-bottom: 10px;font-size: 12px;">温馨提示：用户名必须英文加数字组合，且以英文开头~</p>
+        </div>
+    </div>
+
+<script src="js/mui.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        mui.init();
+        mui.plusReady(function() {
+            var username = document.getElementById("username");
+            var password = document.getElementById("password");
+			var register = document.getElementById("register");
+            register.addEventListener('tap', function() {
+                // 判断用户名是否为空，如果为空则让其获得焦点
+                if (!app.isNotNull(username.value)) {
+                	// 获取焦点
+                	username.focus();
+                } else if (!app.isNotNull(password.value)) {
+                	// 获取焦点
+                	password.focus();
+                } else {
+                	// 判断用户名和密码的长度，进行限制
+					var reg = /^[a-zA-Z][a-zA-Z0-9]*$/;
+                	if (username.value.length > 10) {
+                		app.showToast("用户名不能超过10位", "error");
+                		return false;
+                	} else if (!reg.test(username.value)) {
+						app.showToast("用户名不合法", "error");
+						return false;
+					} else if (password.value.length < 5 || password.value.length > 10) {
+                		app.showToast("密码长度必须在5-10位之间", "error");
+                		return false;
+                	}
+				}
+				// 获取每台手机的唯一cid
+				var cid = plus.push.getClientInfo().clientid;
+				mui.ajax(app.serverUrl + "/u/register", {
+                    data : {
+                        username : username.value,
+                        password : password.value,
+						cid : cid
+                    },
+                    dataType : 'json',//数据格式类型
+                    type : 'post',//http请求类型
+                    timeout : 10000,//超时设置
+					headers : {'Content-Type':'application/json'},
+                    success : function(data) {
+                        if (data.result){
+                            app.showToast("注册成功", "success");
+                            plus.webview.currentWebview().close("slide-out-right");
+                        } else {
+                            app.showToast(data.msg, "error");
+                        }
+                    },
+                    error : function(){
+						
+                    }
+                }); 
+            });
+        });
+    </script>
+</body>
+</html>

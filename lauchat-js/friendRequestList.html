@@ -1,0 +1,139 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.css" rel="stylesheet" />
+		<link href="css/header.css" rel="stylesheet" />
+	</head>
+	<style type="text/css">
+		.mui-content > .mui-table-view:first-child {
+		    margin-top: 0px;
+		}
+	</style>
+	<body>
+		<script src="js/mui.js"></script>
+		<script src="js/app.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				beforeback : function(){
+					 var webview = plus.webview.getWebviewById('contact.html');  
+					 //触发列表界面的自定义事件（refresh）,从而进行数据刷新  
+					 mui.fire(webview, 'refresh');  
+					//返回true，继续页面关闭逻辑
+					return true;
+				}
+			});
+		</script>
+		<header class="mui-bar mui-bar-nav title">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: black;"></a>
+			<h1 class="title-left title-color" style="font-size: 14px;line-height: 44px;font-weight: 400">新的朋友</h1>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view" id="ul_friend_request_list"></ul>
+		</div>
+		<script type="text/javascript">
+			mui.plusReady(function () {
+				var user = app.getUserGlobalInfo();
+				// 加载好友请求记录
+				var currentView = plus.webview.currentWebview();
+				currentView.addEventListener("show", function() {
+					loadingFriendRequest();
+				});
+				
+				function loadingFriendRequest() {
+					mui.ajax(app.serverUrl + "/fr/friendRequestList", {
+						data : {
+							acceptUserId : user.id
+						},
+						dataType : 'json',//服务器返回json格式数据
+						type : 'get',//HTTP请求类型
+						timeout : 10000,//超时时间设置为10秒；
+						success : function(data) {
+							if (data.result) {
+								var html = renderFriendRequestList(data.data);
+								document.getElementById("ul_friend_request_list").innerHTML = html;
+								mui(".mui-table-view-cell").on("tap", ".btn_agree", function(e) {
+									var sendUserId = this.previousSibling.value;
+									operatorFriendRequest(sendUserId, this);
+									e.stopPropagation();
+								});
+							} else {
+								app.showToast(data.msg, "error");
+							}
+						}
+					});
+				}
+				
+				function operatorFriendRequest(sendUserId, btnAgree) {
+					mui.ajax(app.serverUrl + "/fr/operatorFriendRequest", {
+						data : {
+							sendUserId : sendUserId,
+							acceptUserId : user.id
+						},
+						dataType : 'json',//服务器返回json格式数据
+						type : 'post',//HTTP请求类型
+						headers : {'Content-Type':'application/json'},
+						timeout : 10000,//超时时间设置为10秒
+						success : function(data) {
+							if (data.result) {
+								var parent = btnAgree.parentNode;
+								var span = document.createElement('span');
+								span.className += "mui-pull-right";
+								span.style.lineHeight = "42px";
+								span.style.color = "#8f8f94";
+								span.style.fontSize = "12px";
+								span.innerHTML = "已添加";
+								parent.replaceChild(span, btnAgree);
+								app.setContactList(data.data);
+								var contact = plus.webview.getWebviewById("contact.html");
+								mui.fire(contact, "refreshFriendList");
+							} else {
+								app.showToast(data.msg, "error");
+							}
+						}
+					});
+				}
+				
+				function renderFriendRequestList(friendRequestList) {
+					if (friendRequestList == null || friendRequestList.length <= 0) {
+						return "";
+					}
+					var html = "";
+					// 循环渲染好友请求列表
+					for (var i = 0; i < friendRequestList.length; i++) {
+						if (friendRequestList[i].status == 1) {
+							html += 
+							"<li class='mui-table-view-cell mui-media'>" +
+								"<a href='javascript:;'>" +
+									"<input type='hidden' value='" + friendRequestList[i].sendUserId + "'/>" +
+									"<span  class='mui-pull-right'' style='line-height: 42px;color: #8f8f94;font-size: 12px;'>已添加</span>" +
+									"<img class='mui-media-object mui-pull-left' src='" + app.imgServerUrl + friendRequestList[i].sendFaceImage + "'>" +
+									"<div class='mui-media-body'>" +
+										friendRequestList[i].sendNickname +
+										"<p class='mui-ellipsis'>请求添加你为朋友</p>" +
+									"</div>" +
+								"</a>" +
+							"</li>";
+						} else {
+							html += 
+							"<li class='mui-table-view-cell mui-media'>" +
+								"<a href='javascript:;'>" +
+									"<input type='hidden' value='" + friendRequestList[i].sendUserId + "'/>" +
+									"<button type='button' class='mui-btn mui-btn-green btn_agree'>接受</button>" +
+									"<img class='mui-media-object mui-pull-left' src='" + app.imgServerUrl + friendRequestList[i].sendFaceImage + "'>" +
+									"<div class='mui-media-body'>" +
+										friendRequestList[i].sendNickname +
+										"<p class='mui-ellipsis'>请求添加你为朋友</p>" +
+									"</div>" +
+								"</a>" +
+							"</li>";
+						}
+					}
+					return html;
+				}
+			});
+		</script>
+	</body>
+</html>
